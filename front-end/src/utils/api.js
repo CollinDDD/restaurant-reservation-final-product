@@ -5,9 +5,8 @@
 import formatReservationDate from "./format-reservation-date";
 import formatReservationTime from "./format-reservation-date";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5001"
-  // process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
-  // "https://periodic-tables-backend-cjr.herokuapp.com"
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
 
 /**
  * Defines the default headers for these functions to work with `json-server`
@@ -69,47 +68,133 @@ export async function listReservations(params, signal) {
     .then(formatReservationTime);
 }
 
-export async function createReservation(newReservation, signal) {
+
+// function to create new reservations
+export async function createReservations(data, signal){
   const url = new URL(`${API_BASE_URL}/reservations`);
-  return await fetchJson(url, {headers, signal, method: "POST", body: JSON.stringify(newReservation)}, [])
+  const options = {
+    headers, 
+    signal,
+    method: "POST",
+    body: JSON.stringify({data})
+  }
+  return await fetchJson(url, options)
 }
 
-export async function createTable(newTable, signal) {
+//function to list tables
+export async function listTables(params, signal){
+  const url = new URL(`${API_BASE_URL}/tables`)
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  )
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+//function to create new tables
+export async function createTables(data, signal){
   const url = new URL(`${API_BASE_URL}/tables`);
-  return await fetchJson(url, {headers, signal, method: "POST", body: JSON.stringify(newTable)}, [])
+  const options = {
+    headers, 
+    signal,
+    method: "POST",
+    body: JSON.stringify({data})
+  }
+  return await fetchJson(url, options)
 }
 
-export async function listTables(signal) {
-  const url = new URL(`${API_BASE_URL}/tables`);
-  return await fetchJson(url, {headers, signal}, [])
+//function to get reservation information
+export async function getReservation(reservation_id, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`)
+  return await fetchJson(url, { headers, signal }, [])
 }
 
-export async function seatReservation(table_id, reservation, signal) {
+//function to create a seat reservation
+export async function seatReservation(reservation_id, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/seat`);
+  const options = {
+    headers, 
+    signal,
+    method: "POST",
+    body: JSON.stringify({reservation_id})
+  }
+  return await fetchJson(url, options, reservation_id)
+}
+
+//function to update status, this url is looking for the server
+export async function statusUpdate(reservation_id, table_id, signal){
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
-  return await fetchJson(url, {headers, signal, method: "PUT", body: JSON.stringify(reservation)}, [])
+  const options = {
+    headers, 
+    signal,
+    method: "PUT",
+    body: JSON.stringify({data: {reservation_id}})
+  }
+  return await fetchJson(url, options, reservation_id)
 }
 
-export async function finishTable(table_id, signal) {
+
+//function to delete/remove the table assignment
+export async function removeReservation(table_id, reservation_id, signal){
   const url = new URL(`${API_BASE_URL}/tables/${table_id}/seat`);
-  return await fetchJson(url, {headers, signal, method: "DELETE"}, [])
-}
+  const options = {
+    headers, 
+    signal,
+    method: "DELETE",
+  }
+  return await fetchJson(url, options, {});
+};
 
-export async function searchNumber(mobile_number, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations?mobile_number=${mobile_number}`)
-  return await fetchJson(url, {headers, signal}, [])
-}
+/**
+ * Sets the status of the reservation with the specified `reservationId` to cancelled.
+ * @param reservationId
+ * the id of the reservation to delete
+ * @returns {Promise<null|String>}
+ * a promise that resolves to null or an error message.
+ */
+ export async function cancelReservation(reservationId, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservationId}/status`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({
+      data: { status: "cancelled"}
+    }), 
+    headers, 
+    signal,
+  };
+  return await fetchJson(url, options, {});
+ };
 
-export async function readReservation(reservation_id, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
-  return await fetchJson(url, {headers, signal}, [])
-}
 
-export async function cancelReservation(reservation_id, reservation, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`);
-  return await fetchJson(url, {headers, signal, method: "PUT", body: JSON.stringify(reservation)}, [])
-}
+ //funciton to make edits to a reservation
+export async function editReservation(reservationId, data, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservationId}/`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({
+      data }), 
+    headers, 
+    signal,
+  };
+  return await fetchJson(url, options, {});
+ };
 
-export async function updateReservation(reservation_id, updatedReservation, signal) {
-  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
-  return await fetchJson(url, {headers, signal, method: "PUT", body: JSON.stringify(updatedReservation)}, [])
+ //function to change a reservation's status to finished
+ export async function finishReservation(reservationId, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservationId}/status`;
+  const options = {
+    method: "PUT",
+    body: JSON.stringify({
+      data: { status: "finished"}
+    }), 
+    headers, 
+    signal,
+  };
+  return await fetchJson(url, options, {});
+ };
+
+
+ // function to submit a GET request to the server to find phone number
+ export async function getReservationPlusMobile(mobile_number, signal){
+  const url = new URL(`${API_BASE_URL}/reservations/?mobile_number=${mobile_number}`)
+  return await fetchJson(url, { headers, signal }, [])
 }

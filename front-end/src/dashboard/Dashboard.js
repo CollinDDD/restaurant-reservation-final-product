@@ -1,34 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
-import { today, previous, next } from "../utils/date-time";
-import ReservationsView from "./ReservationsView";
-import TablesView from "./TablesView";
+import { listReservations, listTables, removeReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useLocation, useHistory } from 'react-router-dom'
-
+import { previous, next } from "../utils/date-time";
+import ReservationDisplay from "../layout/ReservationDisplay"
+import TableDisplay from "../layout/TableDisplay";
+import { Link, useHistory } from "react-router-dom";
 /**
  * Defines the dashboard page.
  * @param date
  *  the date for which the user wants to view reservations.
  * @returns {JSX.Element}
  */
+
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [tables, setTables] = useState([]);
+  const [tables, setTables] = useState([])
   const [tablesError, setTablesError] = useState(null)
-  const history = useHistory();
-
-  function useQuery() {
-    const { search } = useLocation();
-  
-    return React.useMemo(() => new URLSearchParams(search), [search]);
-  }
-
-  let query = useQuery();
-  if (query.has("date")) {
-    date = query.get("date")
-  }
+  let history = useHistory()
 
   useEffect(loadDashboard, [date]);
 
@@ -38,41 +27,93 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+      
+    
     listTables(abortController.signal)
       .then(setTables)
       .catch(setTablesError)
     return () => abortController.abort();
   }
 
-  function previousDay(date) {
-    const previousDate = previous(date)
-    history.push(`/dashboard?date=${previousDate}`)
+  function getToday(){
+    history.push(`/dashboard`)    
   }
 
-  function nextDay(date) {
-    const nextDate = next(date);
-    history.push(`/dashboard?date=${nextDate}`)
+  function getYesterday(){
+    let yesterday = previous(date)
+    history.push(`/dashboard?date=${yesterday}`)    
   }
+
+  function getTomorrow(){
+    let tomorrow = next(date)
+    history.push(`/dashboard?date=${tomorrow}`)    
+  }
+
+  function onFinish(table_id, reservation_id) {
+    removeReservation(table_id, reservation_id).then(loadDashboard).catch(setTablesError);
+  }
+
+
 
   return (
-    <main>
-      <h1>Reservation Dashboard</h1>
-      <ErrorAlert error={reservationsError || tablesError} />
-      <div className="row my-3">
-        <button className="btn btn-primary col mx-3" onClick={ () => previousDay(date)}>Previous Day</button>
-        <button className="btn btn-primary col mx-3" onClick={ () => history.push(`/dashboard?date=${today()}`)}>Today</button>
-        <button className="btn btn-primary col mx-3" onClick={() => nextDay(date)}>Next Day</button>
-      </div>     
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
+    <>
+    <div className = "container">
+      <div className = "row g-1">
+      {/* <div className="padded col-lg-7 col-md-5 col-sm-12 col-xs-6 card-main"> */}
+      <div className="padded col-7 card-main min-vh-100 ">
+        <div className="text-center">
+          <div>
+            <div className="row p-0 justify-content-center">
+              <div className="col-auto p-1">
+                <h2 className = "bold">Reservations</h2>
+              </div>
+              <div className="col-auto plus-button p-1">
+                <Link className="nav-link " to="/reservations/new">
+                  <span className="oi oi-plus" />
+                  &nbsp;
+                </Link>
+              </div>
+            </div>
+
+            <h6 className="my-2">
+              Date: {date}
+            </h6>
+            <div className="mb-3">
+              <button className="btn btn-secondary" onClick={getYesterday}><span className="oi oi-chevron-left" />&nbsp;Yesterday</button>
+              <button className="btn btn-success" onClick={getToday}>Today </button>
+              <button className="btn btn-primary" onClick={getTomorrow}>Tomorrow&nbsp;<span className="oi oi-chevron-right" /></button>
+            </div>
+            <div className="text-left">
+              <ReservationDisplay reservations={reservations} />
+              <ErrorAlert error={reservationsError} />
+            </div>
+          </div>
+        </div>
       </div>
-      <ReservationsView reservations={reservations} />
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Tables</h4>
+      
+      {/* <div className="padded col-lg-4 col-md-5 col-sm-12 col-xs-6 card-main"> */}
+      <div className="padded col-5 card-main min-vh-100 table-avail ">
+          <div className="text-center ">
+            <div className="row justify-content-center">
+              <div className="col-auto p-1">
+                <h2 className = "bold">Tables</h2>
+              </div>
+              <div className="col-auto plus-button p-1">
+                <Link className="nav-link" to="/tables/new">
+                  <span className="oi oi-plus" />
+                  &nbsp;
+                </Link>
+              </div>
+            </div>
+            
+            <TableDisplay tables={tables} onFinish={onFinish} />
+            <ErrorAlert error={tablesError} />
+          </div>
+        </div>
       </div>
-      <TablesView tables={tables} />
-    </main>
+    </div>
+    </>
   );
 }
-
 export default Dashboard;
+

@@ -10,6 +10,7 @@ function asyncErrorBoundary(delegate, defaultStatus) {
           });
         });
     };
-}
-
-module.exports = asyncErrorBoundary;
+  }
+  
+  module.exports = asyncErrorBoundary;
+  

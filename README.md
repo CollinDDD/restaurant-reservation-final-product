@@ -1,71 +1,45 @@
-# Restaurant Reservation System - Periodic Tables
+# Restaurant Reservation System
 
-This restaurant reservation fullstack application was made as my final project for Thinkful's Software Engineering certification program. It allows users to create, display, and edit reservations as well as tables. Users are able to seat reservations at tables and remove them when finished. 
+# Deployed Link
+https://restaurant-res-front.herokuapp.com/
 
-## Deployments
 
- - Backend Deployment: https://periodic-tables-backend-cjr.herokuapp.com/
+# Screenshots of the API
+### Dashboard
+![Dashboard](/front-end/src/images/Dashboard.PNG?raw=true "Dashboard")
 
- - Frontend Deployment: https://periodic-tables-frontend-cjr.herokuapp.com/dashboard
+### Creating a reservation
+![CreateReservation](/front-end/src/images/CreateReservation.PNG "CreateReservation")
 
-## Features
+### Creating a table
+![CreateTable](/front-end/src/images/CreateTable.PNG "CreateTable")
 
- - View existing reservations and tables on the Dashboard:
- 
- ![Dashboard view](/screenshots/dashboard.png "Dashboard")
- 
- - Create new reservations:
- 
- ![New reservation form](/screenshots/create-reservation.png "New reservation form")
- 
- - Create new table: 
- 
- ![New table form](/screenshots/create-table.png "New table form")
- 
- - Edit existing reservation:
- 
- ![Edit reservation form](/screenshots/edit-reservation.png "Edit reservation form")
- 
- - Seat reservation at free table (only tables not occupied available to select):
- 
- ![Seat reservation form](/screenshots/seat.png "Seat reservation form")
- 
- - Search for existing reservtaion by mobile number:
- 
- ![Search by mobile number](/screenshots/search.png "Search by mobile number")
+### Searching By Phone
+![SearchingByPhone](/front-end/src/images/Search.PNG "SearchingByPhone")
 
-## API Endpoints
+# Description
+This application is designed to allow restaurant staff members to manage customer reservations.
+This application can:
+- Create, edit, and display all reservations
+- Add additional tables/seating
+- Assign reservations to a table
+- Keep track of which tables are free or occupied
+- Free up an occupied table
+- Search for a reservation by phone number
 
- - `GET` requests return JSON responses.
- - `POST` and `PUT` requests require an application/JSON body and return a JSON response
+# Tech
+- Node.js
+- Express
+- React
+- Bootstrap
+- PostGREsql
 
-| Method | Path | Function |
-| ----------- | ----------- | ----------- |
-| GET | /reservations | list reservations for current date |
-| POST | /reservations | create new reservation |
-| GET | /reservations/:reservation_id | list reservation by id |
-| PUT | /reservations/:reservation_id | update reservation |
-| GET | /reservations?mobile_number=xxx-xxx-xxxx | list reservations for specified mobile number |
-| GET | /reservations?date=YYYY-MM-DD | list reservation for specified date |
-| PUT | /reservations/:reservation_id/status | update reservation status |
-| GET | /tables | list all tables |
-| POST | /tables | create new table |
-| PUT | /tables/:table_id/seat | update table with reservation_id from body, update reservation status |
-| DELETE | /tables/:table_id/seat | remove reservation_id from table, update reservation status to finished |
-
-## Technology Used
-
- - Frontend: JavaScript, HTML, CSS, React, React Router, Bootstrap
- - Backend: JavaScript, Node.js, Express, Knex
- - Database: PostgreSQL
- - Tools: Render, Git, GitHub, VSCode, Puppeteer
-
-## Installation
+# Installation instructions
 
 1. Fork and clone this repository.
-1. Run `cp ./back-end/.env.sample ./back-end/.env`.
-1. Update the `./back-end/.env` file with the connection URL's to your ElephantSQL database instance.
-1. Run `cp ./front-end/.env.sample ./front-end/.env`.
-1. You should not need to make changes to the `./front-end/.env` file unless you want to connect to a backend at a location other than `http://localhost:5001`.
+1. Run `cd starter-restaurant-reservation/`
+1. Run `cp ./.env.sample ./.env` in the front end and back end
+1. Front end's .env file should have: `REACT_APP_API_BASE_URL=http://localhost:5001`
+1. Back end's .env file should be 4 different URLs to your host (i.e. ElephantSQL)
 1. Run `npm install` to install project dependencies.
 1. Run `npm run start:dev` to start your server in development mode.
