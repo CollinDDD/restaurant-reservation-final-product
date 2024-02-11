@@ -1,7 +1,10 @@
 # Restaurant Reservation System
 
-# Deployed Link
-https://restaurant-res-front.herokuapp.com/
+# Frontend Link
+https://restaurant-reservation-frontend-pp1i.onrender.com
+
+# Backend Link
+https://restaurant-reservation-backend-pd2q.onrender.com
 
 
 # Screenshots of the API
