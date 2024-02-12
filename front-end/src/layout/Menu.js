@@ -22,9 +22,9 @@ function Menu() {
   // };
   return (
     <nav className="navbar navbar-dark main-navbar navbar-expand-md shadow fixed-top ">
-      <a className="navbar-brand logo white-text" href="/">
+      <Link className="navbar-brand logo white-text" to="/">
         <b>Dashboard</b>
-      </a>
+      </Link>
       <button
         className="navbar-toggler"
         type="button"
