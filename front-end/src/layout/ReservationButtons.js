@@ -2,13 +2,13 @@ import { Link, useHistory } from "react-router-dom";
 import React from "react";
 import { cancelReservation } from "../utils/api";
 
-export default function ReservationButtons({ status, reservation_id }) {
+export default function ReservationButtons({ status, reservation_id, reservation_date }) {
 
 
     const history = useHistory()
         
     async function cancelHandler(e){
-        e.preventDefault()
+        
         let reservationIdCancel = e.target.dataset.reservationIdCancel
         if (
             reservationIdCancel && 
@@ -17,7 +17,7 @@ export default function ReservationButtons({ status, reservation_id }) {
             )
         ) {
             await cancelReservation(reservationIdCancel)
-            history.go(0)
+            history.push(`/dashboard?date=${reservation_date}`)
         }
     }
     

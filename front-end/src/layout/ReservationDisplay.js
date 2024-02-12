@@ -21,7 +21,7 @@ export default function ReservationDisplay({ reservations = []}){
                     <ReservationButtons 
                         status={reservation.status}
                         reservation_id={reservation.reservation_id}
-                        
+                        reservation_date={reservation.reservation_date}
                     />
                 </tr>
                 )
