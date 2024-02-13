@@ -73,7 +73,7 @@ function ReservationForm({reservationId = "", reservation = ""}) {
                 <div className="form-group">
                     <label htmlFor="mobile_number" className="form-label">
                         Mobile Number
-                        <input id="mobile_number" name="mobile_number" type="text" className="form-control" onChange={handleChange} value={formData.mobile_number} />
+                        <input id="mobile_number" name="mobile_number" type="tel" className="form-control" onChange={handleChange} value={formData.mobile_number} />
                     </label>
                 </div>
                 <div className="form-group">
